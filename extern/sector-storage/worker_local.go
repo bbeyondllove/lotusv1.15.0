@@ -3,7 +3,9 @@ package sectorstorage
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
+	"net"
 	"os"
 	"reflect"
 	"runtime"
