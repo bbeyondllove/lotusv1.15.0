@@ -432,7 +432,11 @@ func (st *Local) Reserve(ctx context.Context, sid storage.SectorRef, ft storifac
 	return done, nil
 }
 
-func (st *Local) AcquireSector(ctx context.Context, sid storage.SectorRef, existing storiface.SectorFileType, allocate storiface.SectorFileType, pathType storiface.PathType, op storiface.AcquireMode) (storiface.SectorPaths, storiface.SectorPaths, error) {
+//summer modified at 2022/04/01
+//for do not need to run ./fcfs.sh sync any more
+func (st *Local) acquireSector(ctx context.Context, sid storage.SectorRef, existing storiface.SectorFileType, allocate storiface.SectorFileType, pathType storiface.PathType, op storiface.AcquireMode) (storiface.SectorPaths, storiface.SectorPaths, error) {
+	//summer modified end
+
 	if existing|allocate != existing^allocate {
 		return storiface.SectorPaths{}, storiface.SectorPaths{}, xerrors.New("can't both find and allocate a sector")
 	}
@@ -528,7 +532,7 @@ func (st *Local) AcquireSector(ctx context.Context, sid storage.SectorRef, exist
 	return out, storageIDs, nil
 }
 
-//summer modified at 2022/04/01
+//summer add at 2022/04/01
 //for do not need to run ./fcfs.sh sync any more
 func (st *Local) AcquireSector(ctx context.Context, sid storage.SectorRef, existing storiface.SectorFileType, allocate storiface.SectorFileType, pathType storiface.PathType, op storiface.AcquireMode) (storiface.SectorPaths, storiface.SectorPaths, error) {
 	if allocate != storiface.FTNone || pathType != storiface.PathStorage || os.Getenv("NO_SYNC_PATCH") == "off" {
@@ -596,7 +600,7 @@ func (st *Local) AcquireSector(ctx context.Context, sid storage.SectorRef, exist
 	return st.acquireSector(ctx, sid, existing, allocate, pathType, op)
 }
 
-//summer modified end
+//summer add end
 
 func (st *Local) Local(ctx context.Context) ([]StoragePath, error) {
 	st.localLk.RLock()
